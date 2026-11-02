@@ -16,7 +16,6 @@ window.QAIRAQ_CONFIG = {
   // Байланыс деректері (сайтта көрсетіледі)
   PHONE: "+7 771 323 8133",
 
-  // Qairaq Instagram парақшасы. Сілтеме келгенде осы жолға қойыңыз —
-  // бос болса, сайт Instagram түймесін мүлде көрсетпейді.
-  INSTAGRAM_URL: "",      // мыс. "https://instagram.com/qairaq"
+  // Qairaq Instagram парақшасы (бақылау параметрлерінсіз таза сілтеме).
+  INSTAGRAM_URL: "https://www.instagram.com/qa1raq",
 };
