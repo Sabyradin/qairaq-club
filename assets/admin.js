@@ -123,15 +123,22 @@
 
   $("refresh-btn").addEventListener("click", load);
 
+  // Күнді Алматы уақытымен, Қазақстанда әдеттегі «03.11.2026, 16:30»
+  // пішімінде шығарамыз (локаль өзі ISO түрін беріп қоятындықтан
+  // бөліктерін қолмен құрастырамыз).
+  var DATE_PARTS = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Almaty",
+    day: "2-digit", month: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit", hour12: false,
+  });
+
   function fmtDate(iso) {
     if (!iso) return "—";
     var d = new Date(iso);
     if (isNaN(d.getTime())) return "—";
-    return d.toLocaleString("kk-KZ", {
-      timeZone: "Asia/Almaty",
-      day: "2-digit", month: "2-digit", year: "numeric",
-      hour: "2-digit", minute: "2-digit",
-    });
+    var p = {};
+    DATE_PARTS.formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
+    return p.day + "." + p.month + "." + p.year + ", " + p.hour + ":" + p.minute;
   }
 
   function telHref(phone) {
