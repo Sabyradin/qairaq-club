@@ -295,6 +295,7 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+.roles--3 { grid-template-columns: repeat(3, 1fr); }
 .role {
   position: relative;
   display: block;
@@ -472,6 +473,93 @@ td.num { color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space
   color: var(--cream-soft);
   opacity: .8;
 }
+
+/* ── Әкімші қойындылары ───────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(201, 162, 39, .3);
+  padding-bottom: 10px;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border: 1px solid rgba(201, 162, 39, .35);
+  border-radius: 999px;
+  background: rgba(245, 236, 215, .08);
+  color: var(--cream);
+  font: 600 14px/1 inherit;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.tab:hover { background: rgba(201, 162, 39, .18); }
+.tab.is-active {
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  border-color: var(--gold-dim);
+  color: #2a2008;
+}
+.tab__count {
+  display: inline-block;
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .18);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+.tab.is-active .tab__count { background: rgba(0, 0, 0, .14); }
+
+/* ── Хат карточкалары ─────────────────────────────────────────────── */
+.msg-card {
+  background: linear-gradient(180deg, rgba(245, 236, 215, .97), rgba(237, 224, 196, .95));
+  color: var(--ink);
+  border: 1px solid rgba(140, 111, 29, .45);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .22);
+}
+.msg-card__top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.msg-card__name {
+  font-weight: 700;
+  font-size: 15px;
+  margin-right: auto;
+}
+.msg-card__meta {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.msg-card__meta a { color: #22406f; text-decoration: none; font-weight: 600; }
+.msg-card__meta a:hover { text-decoration: underline; }
+.msg-card__body {
+  background: #fffdf6;
+  border: 1px solid rgba(140, 111, 29, .28);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.chip--request   { background: rgba(43, 90, 160, .18);  color: #22406f; }
+.chip--complaint { background: rgba(163, 58, 58, .16);  color: #7d2a2a; }
+.chip--feedback  { background: rgba(47, 125, 79, .18);  color: #1d5634; }
 
 .login-box {
   max-width: 400px;

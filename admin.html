@@ -59,6 +59,14 @@
       </div>
     </div>
 
+    <!-- Екі бөлім: тіркелгендер мен хаттар -->
+    <div class="tabs">
+      <button class="tab is-active" data-tab="regs">Тіркелгендер <span class="tab__count" id="tc-regs">0</span></button>
+      <button class="tab" data-tab="msgs">Өтініш / арыз / пікір <span class="tab__count" id="tc-msgs">0</span></button>
+    </div>
+
+    <!-- ══ Тіркелгендер ══ -->
+    <div id="pane-regs">
     <div class="stats">
       <div class="stat"><div class="stat__label">Барлығы</div><div class="stat__value" id="st-total">0</div></div>
       <div class="stat"><div class="stat__label">Оқушы</div><div class="stat__value" id="st-student">0</div></div>
@@ -91,6 +99,7 @@
             <th>Рөлі</th>
             <th>Сыныбы</th>
             <th>Мектебі</th>
+            <th>Телефон</th>
             <th>Тіркелген күні</th>
             <th>Мәртебесі</th>
           </tr>
@@ -99,6 +108,38 @@
       </table>
     </div>
     <div class="empty" id="empty" hidden>Әзірге тіркелген ешкім жоқ.</div>
+    </div><!-- /pane-regs -->
+
+    <!-- ══ Өтініш / арыз / пікір ══ -->
+    <div id="pane-msgs" hidden>
+      <div class="stats">
+        <div class="stat"><div class="stat__label">Барлық хат</div><div class="stat__value" id="ms-total">0</div></div>
+        <div class="stat"><div class="stat__label">Өтініш</div><div class="stat__value" id="ms-request">0</div></div>
+        <div class="stat"><div class="stat__label">Арыз</div><div class="stat__value" id="ms-complaint">0</div></div>
+        <div class="stat"><div class="stat__label">Жаңа</div><div class="stat__value" id="ms-new">0</div></div>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="mq" placeholder="Аты, мектебі немесе хат мәтіні бойынша іздеу...">
+        <select id="mf-kind">
+          <option value="">Барлық түрі</option>
+          <option value="request">Өтініш</option>
+          <option value="complaint">Арыз</option>
+          <option value="feedback">Пікір</option>
+        </select>
+        <select id="mf-status">
+          <option value="">Барлық мәртебе</option>
+          <option value="new">Жаңа</option>
+          <option value="reviewing">Қаралуда</option>
+          <option value="accepted">Шешілді</option>
+          <option value="rejected">Қабылданбады</option>
+        </select>
+      </div>
+
+      <div id="msg-cards"></div>
+      <div class="empty" id="msg-empty" hidden>Әзірге хат келген жоқ.</div>
+    </div><!-- /pane-msgs -->
+
     <div class="msg" id="list-msg"></div>
   </section>
 

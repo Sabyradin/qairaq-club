@@ -25,6 +25,7 @@
       <a href="#about">Клуб туралы</a>
       <a href="#programs">Бағдарламалар</a>
       <a href="#register">Тіркелу</a>
+      <a href="#feedback">Өтініш</a>
     </nav>
   </header>
 
@@ -124,6 +125,13 @@
             </div>
 
             <div class="field full">
+              <label for="phone">6. Телефон нөмірі</label>
+              <input type="tel" id="phone" name="phone" inputmode="tel"
+                     placeholder="+7 7__ ___ __ __" autocomplete="tel" required>
+              <p class="hint">Сізбен осы нөмір арқылы хабарласамыз</p>
+            </div>
+
+            <div class="field full">
               <button type="submit" class="btn btn--gold" id="submit-btn" style="width:100%">Жіберу</button>
             </div>
           </div>
@@ -157,6 +165,83 @@
           </p>
         </div>
       </aside>
+    </div>
+  </section>
+
+  <!-- ── Өтініш / арыз / пікір ───────────────────────────────────── -->
+  <section class="section" id="feedback">
+    <h2 class="section__title">Өтініш, арыз немесе пікір</h2>
+    <p class="section__lead">
+      Ұсынысыңыз, сұрағыңыз немесе шағымыңыз болса — осында жазыңыз.
+      Әр хат әкімшіге түседі әрі жауапсыз қалмайды.
+    </p>
+
+    <div class="panel">
+      <form id="msg-form" novalidate>
+        <div class="form-grid">
+
+          <div class="field full">
+            <label>Хат түрі</label>
+            <div class="roles roles--3">
+              <label class="role">
+                <input type="radio" name="kind" value="request" checked>
+                <span>Өтініш</span>
+              </label>
+              <label class="role">
+                <input type="radio" name="kind" value="complaint">
+                <span>Арыз</span>
+              </label>
+              <label class="role">
+                <input type="radio" name="kind" value="feedback">
+                <span>Пікір</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>Сіз кімсіз?</label>
+            <div class="roles">
+              <label class="role">
+                <input type="radio" name="m_role" value="student" checked>
+                <span>Оқушы</span>
+              </label>
+              <label class="role">
+                <input type="radio" name="m_role" value="teacher">
+                <span>Мұғалім</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="m_name">Аты-жөніңіз</label>
+            <input type="text" id="m_name" name="m_name" autocomplete="name" required>
+          </div>
+
+          <div class="field">
+            <label for="m_phone">Телефон нөмірі</label>
+            <input type="tel" id="m_phone" name="m_phone" inputmode="tel"
+                   placeholder="+7 7__ ___ __ __" autocomplete="tel" required>
+          </div>
+
+          <div class="field full">
+            <label for="m_school">Мектебіңіз</label>
+            <input type="text" id="m_school" name="m_school">
+            <p class="hint">Міндетті емес</p>
+          </div>
+
+          <div class="field full">
+            <label for="m_body">Хатыңыз</label>
+            <textarea id="m_body" name="m_body" rows="5" required
+                      placeholder="Ойыңызды еркін жазыңыз..."></textarea>
+          </div>
+
+          <div class="field full">
+            <button type="submit" class="btn btn--gold" id="msg-btn" style="width:100%">Жіберу</button>
+          </div>
+        </div>
+
+        <div class="msg" id="msg-result"></div>
+      </form>
     </div>
   </section>
 

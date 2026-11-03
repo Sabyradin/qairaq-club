@@ -57,6 +57,12 @@
     msg.textContent = text;
   }
 
+  // Телефон: пішімге қатаң талап қоймаймыз (+7, 8, бос орын, сызықша —
+  // бәрі жарайды), тек сан саны жеткілікті ме, соны тексереміз.
+  function isPhoneOk(value) {
+    return (String(value || "").replace(/\D/g, "")).length >= 10;
+  }
+
   // ── Supabase ────────────────────────────────────────────────────
   var sb = null;
   if (cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase) {
@@ -73,6 +79,7 @@
       first_name: form.first_name.value.trim(),
       grade:      gradeWrap.hidden ? null : (gradeInput.value.trim() || null),
       school:     form.school.value.trim(),
+      phone:      form.phone.value.trim(),
     };
 
     if (!data.last_name || !data.first_name) {
@@ -85,6 +92,10 @@
     }
     if (data.role === "student" && !data.grade) {
       show("bad", "Сыныбыңызды жазыңыз.");
+      return;
+    }
+    if (!isPhoneOk(data.phone)) {
+      show("bad", "Телефон нөміріңізді толық жазыңыз (кемінде 10 сан).");
       return;
     }
 
@@ -108,6 +119,64 @@
       form.reset();
       syncRole();
       show("ok", "Өтінішіңіз қабылданды. Рақмет! Жақын арада хабарласамыз.");
+    });
+  });
+
+  // ── Өтініш / арыз / пікір формасы ───────────────────────────────
+  var mForm = document.getElementById("msg-form");
+  var mBtn  = document.getElementById("msg-btn");
+  var mMsg  = document.getElementById("msg-result");
+
+  function mShow(kind, text) {
+    mMsg.className = kind ? "msg is-" + kind : "msg";
+    mMsg.textContent = text || "";
+  }
+
+  function pickedValue(name, fallback) {
+    var el = mForm.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : fallback;
+  }
+
+  mForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var data = {
+      kind:      pickedValue("kind", "feedback"),
+      role:      pickedValue("m_role", "student"),
+      full_name: mForm.m_name.value.trim(),
+      phone:     mForm.m_phone.value.trim(),
+      school:    mForm.m_school.value.trim() || null,
+      body:      mForm.m_body.value.trim(),
+    };
+
+    if (!data.full_name) { mShow("bad", "Аты-жөніңізді жазыңыз."); return; }
+    if (!isPhoneOk(data.phone)) {
+      mShow("bad", "Телефон нөміріңізді толық жазыңыз (кемінде 10 сан).");
+      return;
+    }
+    if (data.body.length < 10) {
+      mShow("bad", "Хатыңызды толығырақ жазыңыз (кемінде 10 таңба).");
+      return;
+    }
+
+    if (!sb) {
+      mShow("bad", "Сайт дерекқорға әлі қосылмаған. assets/config.js ішіне Supabase мекенжайы мен кілтін қойыңыз.");
+      return;
+    }
+
+    mBtn.disabled = true;
+    mBtn.textContent = "Жіберілуде...";
+    mShow("", "");
+
+    sb.from("messages").insert([data]).then(function (res) {
+      mBtn.disabled = false;
+      mBtn.textContent = "Жіберу";
+      if (res.error) {
+        mShow("bad", "Жіберілмеді: " + res.error.message);
+        return;
+      }
+      mForm.reset();
+      mShow("ok", "Хатыңыз жіберілді. Рақмет! Әкімші оны міндетті түрде қарайды.");
     });
   });
 })();
