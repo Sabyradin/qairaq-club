@@ -478,6 +478,74 @@ body {
 .quote::before { top: 0; }
 .quote::after  { bottom: 0; }
 
+/* ── Ұлағатты сөз: портрет + дәйексөз ─────────────────────────────── */
+.sages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+  gap: 18px;
+}
+.sage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  margin: 0;              /* figure әдепкі шетін алып тастаймыз */
+  padding: 26px 22px 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(245, 236, 215, .05);
+  backdrop-filter: blur(5px);
+  transition: transform .22s ease, border-color .22s ease, background .22s ease;
+}
+.sage:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  background: rgba(245, 236, 215, .08);
+}
+
+/* Портрет — алтын жиекті алқа */
+.sage__frame {
+  width: 124px;
+  height: 124px;
+  flex: none;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(160deg, var(--gold-light), var(--gold-dim));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .4);
+}
+.sage__frame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 18%;
+  background: var(--navy-soft);
+}
+
+.sage__quote {
+  margin: 0;
+  flex: 1;
+  font: italic 400 15.5px/1.6 var(--serif);
+  color: var(--cream);
+}
+.sage__name {
+  margin: 0;
+  font: 700 12px/1.3 var(--sans);
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+.sage__name::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin: 0 auto 10px;
+  background: var(--gold-dim);
+}
+
 /* ── Сандар жолағы ────────────────────────────────────────────────── */
 .facts {
   display: grid;
