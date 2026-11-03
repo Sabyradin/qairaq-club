@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Qairaq — Әкімші панелі</title>
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d1726">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23f5ecd7' stroke='%23c9a227' stroke-width='2'/><text x='16' y='23' font-family='Georgia,serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230d1726'>Q</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
+
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -18,7 +26,7 @@
   <header class="topbar">
     <a class="brand" href="index.html">
       <span class="brand__mark">Q</span>
-      <span class="brand__name">QAIRAQ · Әкімші</span>
+      <span class="brand__name">QAIRAQ · ӘКІМШІ</span>
     </a>
     <nav class="nav">
       <a href="index.html">Сайтқа қайту</a>
@@ -28,8 +36,10 @@
   <!-- ── Кіру экраны ─────────────────────────────────────────────── -->
   <section id="login-view" class="login-box" hidden>
     <div class="panel">
-      <h2 style="margin:0 0 4px;font:700 22px/1.2 Georgia,serif">Әкімші кіруі</h2>
-      <p class="hint" style="margin:0 0 18px">Тіркелгендер тізімін тек әкімші көре алады.</p>
+      <span class="section__eyebrow" style="text-align:left;color:var(--gold-dim)">Жабық бөлім</span>
+      <h2 class="panel__title" style="font-size:23px">Әкімші кіруі</h2>
+      <p class="panel__hint">Тіркелгендер мен хаттарды тек әкімші көре алады.</p>
+
       <form id="login-form">
         <div class="field" style="margin-bottom:14px">
           <label for="email">Пошта</label>
@@ -40,7 +50,7 @@
           <input type="password" id="password" autocomplete="current-password" required>
         </div>
         <button type="submit" class="btn btn--gold" style="width:100%" id="login-btn">Кіру</button>
-        <div class="msg" id="login-msg"></div>
+        <div class="msg" id="login-msg" role="status" aria-live="polite"></div>
       </form>
     </div>
   </section>
@@ -49,13 +59,14 @@
   <section id="list-view" hidden>
     <div class="admin-head">
       <div>
-        <h2 class="section__title" style="text-align:left;margin:0">Тіркелгендер</h2>
-        <p class="hint" style="color:var(--cream-soft);opacity:.8;margin:2px 0 0" id="who"></p>
+        <span class="section__eyebrow" style="text-align:left">Басқару панелі</span>
+        <h2 class="section__title">Тіркелгендер</h2>
+        <p class="hint" style="color:var(--cream-soft);opacity:.75;margin:4px 0 0;font-size:13px" id="who"></p>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn--ghost" id="refresh-btn" style="padding:9px 18px;font-size:14px">Жаңарту</button>
-        <button class="btn btn--ghost" id="export-btn" style="padding:9px 18px;font-size:14px">CSV жүктеу</button>
-        <button class="btn btn--ghost" id="logout-btn" style="padding:9px 18px;font-size:14px">Шығу</button>
+        <button class="btn btn--ghost" id="refresh-btn" style="padding:10px 20px;font-size:14px">Жаңарту</button>
+        <button class="btn btn--ghost" id="export-btn" style="padding:10px 20px;font-size:14px">CSV жүктеу</button>
+        <button class="btn btn--ghost" id="logout-btn" style="padding:10px 20px;font-size:14px">Шығу</button>
       </div>
     </div>
 
@@ -67,47 +78,47 @@
 
     <!-- ══ Тіркелгендер ══ -->
     <div id="pane-regs">
-    <div class="stats">
-      <div class="stat"><div class="stat__label">Барлығы</div><div class="stat__value" id="st-total">0</div></div>
-      <div class="stat"><div class="stat__label">Оқушы</div><div class="stat__value" id="st-student">0</div></div>
-      <div class="stat"><div class="stat__label">Мұғалім</div><div class="stat__value" id="st-teacher">0</div></div>
-      <div class="stat"><div class="stat__label">Жаңа өтініш</div><div class="stat__value" id="st-new">0</div></div>
-    </div>
+      <div class="stats">
+        <div class="stat"><div class="stat__label">Барлығы</div><div class="stat__value" id="st-total">0</div></div>
+        <div class="stat"><div class="stat__label">Оқушы</div><div class="stat__value" id="st-student">0</div></div>
+        <div class="stat"><div class="stat__label">Мұғалім</div><div class="stat__value" id="st-teacher">0</div></div>
+        <div class="stat"><div class="stat__label">Жаңа өтініш</div><div class="stat__value" id="st-new">0</div></div>
+      </div>
 
-    <div class="toolbar">
-      <input type="search" id="q" placeholder="Аты, тегі немесе мектебі бойынша іздеу...">
-      <select id="f-role">
-        <option value="">Барлық рөл</option>
-        <option value="student">Оқушы</option>
-        <option value="teacher">Мұғалім</option>
-      </select>
-      <select id="f-status">
-        <option value="">Барлық мәртебе</option>
-        <option value="new">Жаңа</option>
-        <option value="reviewing">Қаралуда</option>
-        <option value="accepted">Қабылданды</option>
-        <option value="rejected">Қабылданбады</option>
-      </select>
-    </div>
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Аты, тегі, мектебі немесе телефоны бойынша іздеу...">
+        <select id="f-role">
+          <option value="">Барлық рөл</option>
+          <option value="student">Оқушы</option>
+          <option value="teacher">Мұғалім</option>
+        </select>
+        <select id="f-status">
+          <option value="">Барлық мәртебе</option>
+          <option value="new">Жаңа</option>
+          <option value="reviewing">Қаралуда</option>
+          <option value="accepted">Қабылданды</option>
+          <option value="rejected">Қабылданбады</option>
+        </select>
+      </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Тегі, аты</th>
-            <th>Рөлі</th>
-            <th>Сыныбы</th>
-            <th>Мектебі</th>
-            <th>Телефон</th>
-            <th>Тіркелген күні</th>
-            <th>Мәртебесі</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
-    <div class="empty" id="empty" hidden>Әзірге тіркелген ешкім жоқ.</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Тегі, аты</th>
+              <th>Рөлі</th>
+              <th>Сыныбы</th>
+              <th>Мектебі</th>
+              <th>Телефон</th>
+              <th>Тіркелген күні</th>
+              <th>Мәртебесі</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty" hidden>Әзірге тіркелген ешкім жоқ.</div>
     </div><!-- /pane-regs -->
 
     <!-- ══ Өтініш / арыз / пікір ══ -->
@@ -120,7 +131,7 @@
       </div>
 
       <div class="toolbar">
-        <input type="search" id="mq" placeholder="Аты, мектебі немесе хат мәтіні бойынша іздеу...">
+        <input type="search" id="mq" placeholder="Аты, мектебі, телефоны немесе хат мәтіні бойынша іздеу...">
         <select id="mf-kind">
           <option value="">Барлық түрі</option>
           <option value="request">Өтініш</option>
@@ -140,13 +151,13 @@
       <div class="empty" id="msg-empty" hidden>Әзірге хат келген жоқ.</div>
     </div><!-- /pane-msgs -->
 
-    <div class="msg" id="list-msg"></div>
+    <div class="msg" id="list-msg" role="status" aria-live="polite"></div>
   </section>
 
   <!-- ── Баптау жетіспесе ────────────────────────────────────────── -->
   <section id="setup-view" class="login-box" hidden>
     <div class="panel">
-      <h2 style="margin:0 0 8px;font:700 20px/1.2 Georgia,serif">Дерекқор қосылмаған</h2>
+      <h2 class="panel__title" style="font-size:21px">Дерекқор қосылмаған</h2>
       <p style="margin:0;font-size:14px;color:var(--ink-soft)">
         <code>assets/config.js</code> ішіндегі <b>SUPABASE_URL</b> мен
         <b>SUPABASE_ANON_KEY</b> өрістерін толтырыңыз. Нұсқаулық —
@@ -155,7 +166,11 @@
     </div>
   </section>
 
-  <footer><p>© <span id="year"></span> Qairaq Клубы</p></footer>
+  <footer>
+    <div class="footer__bottom" style="border-top:none">
+      © <span id="year"></span> Qairaq Клубы · әкімші панелі
+    </div>
+  </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>

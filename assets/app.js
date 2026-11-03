@@ -1,18 +1,29 @@
-// Qairaq клубы — басты беттің логикасы: тіркелу формасы + байланыс блогы.
+// Qairaq клубы — басты беттің логикасы:
+// байланыс блогы, тіркелу формасы, өтініш/арыз/пікір формасы,
+// айналдырғанда пайда болу және мәзірдегі белсенді бөлім.
 (function () {
   "use strict";
 
   var cfg = window.QAIRAQ_CONFIG || {};
 
   // ── Байланыс блогы ──────────────────────────────────────────────
-  var phone = cfg.PHONE || "";
+  var phone     = cfg.PHONE || "";
   var phoneText = document.getElementById("phone-text");
   var phoneLink = document.getElementById("phone-link");
+  var footPhone = document.getElementById("foot-phone");
+
+  function telHref(v) { return "tel:" + String(v).replace(/[^\d+]/g, ""); }
+
   if (phone) {
     phoneText.textContent = phone;
-    phoneLink.href = "tel:" + phone.replace(/[^\d+]/g, "");
+    phoneLink.href = telHref(phone);
+    if (footPhone) {
+      footPhone.textContent = phone;
+      footPhone.href = telHref(phone);
+    }
   } else {
     phoneLink.hidden = true;
+    if (footPhone) footPhone.closest("li").hidden = true;
   }
 
   // Instagram сілтемесі config.js-те толтырылғанда ғана көрінеді
@@ -22,6 +33,9 @@
     igLink.href = ig;
     igLink.hidden = false;
     document.getElementById("ig-pending").hidden = true;
+
+    var footIg = document.getElementById("foot-ig");
+    if (footIg) { footIg.href = ig; footIg.hidden = false; }
   }
 
   document.getElementById("year").textContent = new Date().getFullYear();
@@ -43,8 +57,11 @@
     var isStudent = currentRole() === "student";
     gradeWrap.hidden = !isStudent;
     if (!isStudent) gradeInput.value = "";
-    // Мұғалімге «оқитын» емес, «жұмыс істейтін» мектебі
-    schoolLbl.textContent = isStudent ? "5. Оқитын мектебі" : "4. Жұмыс істейтін мектебі";
+    // Мұғалімге «оқитын» емес, «жұмыс істейтін» мектебі.
+    // Жұлдызшаны жоғалтып алмау үшін мәтін түйінін ғана ауыстырамыз.
+    schoolLbl.firstChild.nodeValue = isStudent
+      ? "5. Оқитын мектебі "
+      : "4. Жұмыс істейтін мектебі ";
   }
 
   form.querySelectorAll('input[name="role"]').forEach(function (r) {
@@ -53,8 +70,8 @@
   syncRole();
 
   function show(kind, text) {
-    msg.className = "msg is-" + kind;
-    msg.textContent = text;
+    msg.className = kind ? "msg is-" + kind : "msg";
+    msg.textContent = text || "";
   }
 
   // Телефон: пішімге қатаң талап қоймаймыз (+7, 8, бос орын, сызықша —
@@ -69,7 +86,9 @@
     sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   }
 
-  // ── Жіберу ──────────────────────────────────────────────────────
+  var NO_DB = "Сайт дерекқорға әлі қосылмаған. assets/config.js ішіне Supabase мекенжайы мен кілтін қойыңыз.";
+
+  // ── Тіркелуді жіберу ────────────────────────────────────────────
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -98,16 +117,11 @@
       show("bad", "Телефон нөміріңізді толық жазыңыз (кемінде 10 сан).");
       return;
     }
-
-    if (!sb) {
-      show("bad", "Сайт дерекқорға әлі қосылмаған. assets/config.js ішіне Supabase мекенжайы мен кілтін қойыңыз.");
-      return;
-    }
+    if (!sb) { show("bad", NO_DB); return; }
 
     btn.disabled = true;
     btn.textContent = "Жіберілуде...";
-    show("ok", "");
-    msg.className = "msg";
+    show("", "");
 
     sb.from("registrations").insert([data]).then(function (res) {
       btn.disabled = false;
@@ -158,11 +172,7 @@
       mShow("bad", "Хатыңызды толығырақ жазыңыз (кемінде 10 таңба).");
       return;
     }
-
-    if (!sb) {
-      mShow("bad", "Сайт дерекқорға әлі қосылмаған. assets/config.js ішіне Supabase мекенжайы мен кілтін қойыңыз.");
-      return;
-    }
+    if (!sb) { mShow("bad", NO_DB); return; }
 
     mBtn.disabled = true;
     mBtn.textContent = "Жіберілуде...";
@@ -179,4 +189,60 @@
       mShow("ok", "Хатыңыз жіберілді. Рақмет! Әкімші оны міндетті түрде қарайды.");
     });
   });
+
+  // ── Айналдырғанда пайда болу ────────────────────────────────────
+  var reveals = document.querySelectorAll(".reveal");
+  if (!window.IntersectionObserver) {
+    // Ескі браузер — бірден көрсетеміз, жасырып қалмайық
+    reveals.forEach(function (el) { el.classList.add("is-in"); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add("is-in");
+          io.unobserve(en.target);
+        }
+      });
+    }, { rootMargin: "80px 0px 80px 0px", threshold: .02 });
+    reveals.forEach(function (el) { io.observe(el); });
+  }
+
+  // ── Мәзір: қай бөлімде тұрғанымызды белгілеу ────────────────────
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll("#nav a[href^='#']"));
+  var targets = navLinks
+    .map(function (a) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      return el ? { link: a, el: el } : null;
+    })
+    .filter(Boolean);
+
+  function markActive() {
+    // Экранның жоғарғы үштен біріне ең жақын бөлімді белсенді етеміз
+    var line = window.scrollY + window.innerHeight * 0.3;
+    var best = targets[0];
+    targets.forEach(function (t) {
+      if (t.el.offsetTop <= line) best = t;
+    });
+    // Беттің ең түбіне жеткенде — соңғы бөлім
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 4) {
+      best = targets[targets.length - 1];
+    }
+    if (!best || best.link.classList.contains("is-active")) return;
+    navLinks.forEach(function (a) { a.classList.remove("is-active"); });
+    best.link.classList.add("is-active");
+    // Кіші экранда мәзір жанынан сырғиды — белсенді тармақ көрініп тұрсын
+    if (best.link.scrollIntoView) {
+      best.link.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+  }
+
+  if (targets.length) {
+    var ticking = false;
+    window.addEventListener("scroll", function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { markActive(); ticking = false; });
+    }, { passive: true });
+    markActive();
+  }
 })();
